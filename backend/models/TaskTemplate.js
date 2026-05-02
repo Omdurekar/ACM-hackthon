@@ -12,6 +12,11 @@ const taskTemplateSchema = new mongoose.Schema(
       enum: ['easy', 'medium', 'hard'],
       required: true,
     },
+    urgency: {
+      type: String,
+      enum: ['low', 'medium', 'high'],
+      required: true,
+    },
     type: {
       type: String,
       enum: ['normal', 'deep', 'deep work'],
