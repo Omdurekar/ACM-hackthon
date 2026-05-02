@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-obsidian: #0f172a;
+  --color-obsidian-light: #1e293b;
+  --color-amber: #fef3c7;
+  --color-amber-dark: #fde68a;
+  --color-accent: #3b82f6;
+  --font-sans: var(--font-inter);
+}
+
+:root {
+  --background: var(--color-obsidian);
+  --foreground: #f8fafc;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  --timer-track: rgba(255, 255, 255, 0.1);
+  --timer-progress: var(--color-accent);
+}
+
+:root[data-phase="rest"] {
+  --background: var(--color-amber);
+  --foreground: #1e293b;
+  --glass-bg: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  --timer-track: rgba(0, 0, 0, 0.1);
+  --timer-progress: #f59e0b;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.glass-panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 1.5rem;
+}
