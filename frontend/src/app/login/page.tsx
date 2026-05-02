@@ -16,7 +16,7 @@ export default function LoginPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoggedIn(true);
-    router.push("/");
+    router.push("/onboarding");
   };
 
   return (
