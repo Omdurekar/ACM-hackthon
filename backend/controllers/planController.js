@@ -39,7 +39,11 @@ const getDailyPlan = async (req, res) => {
     }).populate('tasks.taskId').populate('executionSequence.taskId');
 
     if (plan) {
-      return res.status(200).json({ plan });
+      if (req.query.recreate === 'true') {
+        await DailyPlan.findByIdAndDelete(plan._id);
+      } else {
+        return res.status(200).json({ plan });
+      }
     }
 
     // Generate new plan

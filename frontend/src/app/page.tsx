@@ -16,9 +16,50 @@ export default function HomePage() {
   const [hasGenerated, setHasGenerated] = useState(false);
   const [dateStr, setDateStr] = useState("");
 
+  const fetchTasks = async (recreate = false) => {
+    try {
+      const url = recreate 
+        ? "http://localhost:5000/api/daily-plan?recreate=true" 
+        : "http://localhost:5000/api/daily-plan";
+        
+      const res = await fetch(url);
+      const data = await res.json();
+      
+      if (data.plan && data.plan.tasks) {
+        // Map the generated DailyPlan tasks (which are sorted by urgency)
+        const formattedTasks = data.plan.tasks.map((pt: any) => ({
+          id: pt.taskId._id,
+          title: pt.taskId.title,
+          complexity: pt.taskId.difficulty,
+          status: pt.taskId.status === "pending" ? "todo" : pt.taskId.status,
+          sessions: pt.assignedSessions
+        }));
+        setTasks(formattedTasks);
+        if (formattedTasks.length > 0) setHasGenerated(true);
+      } else if (data.message === 'No pending tasks to plan' || !data.plan) {
+        // Fallback to fetch raw tasks if no plan can be generated (e.g. all completed)
+        const rawRes = await fetch("http://localhost:5000/api/tasks");
+        const rawData = await rawRes.json();
+        if (rawData.tasks) {
+          const formattedTasks = rawData.tasks.map((t: any) => ({
+            id: t._id,
+            title: t.title,
+            complexity: t.difficulty,
+            status: t.status === "pending" ? "todo" : t.status
+          }));
+          setTasks(formattedTasks);
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching tasks:", err);
+    }
+  };
+
   useEffect(() => {
     if (!isLoggedIn) {
       router.push("/login");
+    } else {
+      fetchTasks();
     }
   }, [isLoggedIn, router]);
 
@@ -29,19 +70,54 @@ export default function HomePage() {
 
   if (!isLoggedIn) return null;
 
-  const handleGenerate = (newTask: Task) => {
-    setTasks((prev) => [newTask, ...prev]);
-    setHasGenerated(true);
+  const handleGenerate = async (newTaskData: any) => {
+    try {
+      const res = await fetch("http://localhost:5000/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newTaskData)
+      });
+      if (res.ok) {
+        // Recreate the plan immediately so the new task gets sorted!
+        fetchTasks(true);
+      }
+    } catch (err) {
+      console.error("Error creating task:", err);
+    }
   };
 
-  const toggleTask = (id: string) => {
+  const toggleTask = async (id: string) => {
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
+
+    const newStatus = task.status === "completed" ? "pending" : "completed";
+
+    // Optimistic UI update
     setTasks((prev) =>
       prev.map((t) =>
         t.id === id
-          ? { ...t, status: t.status === "completed" ? "todo" : "completed" }
+          ? { ...t, status: newStatus === "pending" ? "todo" : "completed" }
           : t
       )
     );
+
+    try {
+      const res = await fetch(`http://localhost:5000/api/tasks/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus })
+      });
+      if (!res.ok) {
+        fetchTasks(); // Revert on failure
+      }
+    } catch (err) {
+      console.error("Error updating task:", err);
+      fetchTasks(); // Revert on failure
+    }
+  };
+
+  const handleGenerateDailyPlan = async () => {
+    await fetchTasks(true);
   };
 
   return (
@@ -67,22 +143,22 @@ export default function HomePage() {
         
         <div className="flex gap-4 overflow-x-auto pb-2 md:pb-0">
           <div className="glass-panel px-5 py-3 min-w-[130px]">
-            <div className="text-xs opacity-60 uppercase tracking-wider">Sessions today</div>
-            <div className="text-xl font-semibold mt-1">0</div>
+            <div className="text-xs opacity-60 uppercase tracking-wider">Tasks</div>
+            <div className="text-xl font-semibold mt-1">{tasks.length}</div>
           </div>
           <div className="glass-panel px-5 py-3 min-w-[130px]">
-            <div className="text-xs opacity-60 uppercase tracking-wider">Focus time</div>
-            <div className="text-xl font-semibold mt-1">0 min</div>
+            <div className="text-xs opacity-60 uppercase tracking-wider">Completed</div>
+            <div className="text-xl font-semibold mt-1">{tasks.filter(t => t.status === "completed").length}</div>
           </div>
           <div className="glass-panel px-5 py-3 min-w-[130px]">
             <div className="text-xs opacity-60 uppercase tracking-wider">Streak</div>
-            <div className="text-xl font-semibold mt-1">0 days</div>
+            <div className="text-xl font-semibold mt-1">1 days</div>
           </div>
         </div>
       </div>
 
       {/* 5. Resume Session Banner */}
-      {hasGenerated && tasks.length > 0 && (
+      {hasGenerated && tasks.length > 0 && tasks.some(t => t.status !== "completed") && (
         <motion.div 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -90,10 +166,10 @@ export default function HomePage() {
         >
           <div className="flex items-center gap-3 text-[var(--timer-progress)]">
             <PlayCircle className="w-5 h-5" />
-            <span className="font-medium">Resume: {tasks[0].title} (Session 2/4)</span>
+            <span className="font-medium">Up Next: {tasks.find(t => t.status !== "completed")?.title}</span>
           </div>
           <button className="px-6 py-2 bg-[var(--timer-progress)] text-white text-sm rounded-lg font-medium shadow transition-transform hover:scale-105 active:scale-95">
-            Resume
+            Focus Now
           </button>
         </motion.div>
       )}
@@ -105,7 +181,10 @@ export default function HomePage() {
           <AddTask onGenerate={handleGenerate} />
 
           <div className="flex flex-col gap-4">
-            <h2 className="text-xl font-semibold opacity-90">Today's Plan</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold opacity-90">Today's Plan</h2>
+              <button onClick={handleGenerateDailyPlan} className="text-xs opacity-60 hover:opacity-100 underline decoration-dotted">Re-Schedule</button>
+            </div>
             {!hasGenerated || tasks.length === 0 ? (
               <div className="glass-panel p-8 text-center flex flex-col items-center gap-3">
                 <div className="opacity-50">No plan for today</div>
@@ -113,7 +192,7 @@ export default function HomePage() {
                   onClick={() => document.querySelector('input')?.focus()}
                   className="text-sm text-[var(--timer-progress)] underline decoration-dotted opacity-80 hover:opacity-100 transition-opacity"
                 >
-                  Generate Plan
+                  Add a Task
                 </button>
               </div>
             ) : (

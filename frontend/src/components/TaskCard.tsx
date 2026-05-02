@@ -10,6 +10,7 @@ export interface Task {
   title: string;
   status: "todo" | "in_progress" | "completed";
   complexity: "low" | "medium" | "high";
+  sessions?: number;
 }
 
 interface TaskCardProps {
@@ -46,7 +47,7 @@ export function TaskCard({ task, onToggle }: TaskCardProps) {
           {task.title}
         </h3>
         <span className="text-xs opacity-70 capitalize mt-1 inline-block">
-          {task.complexity} complexity
+          {task.complexity} complexity {task.sessions ? `• ${task.sessions} sessions` : ""}
         </span>
       </div>
     </motion.div>

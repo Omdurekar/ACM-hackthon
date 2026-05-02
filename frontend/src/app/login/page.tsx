@@ -12,7 +12,6 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,22 +46,21 @@ export default function LoginPage() {
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="bg-white/30 backdrop-blur-3xl p-6 sm:p-10 w-full max-w-md relative z-10 border border-white/50 rounded-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]"
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
+        className="bg-white/60 backdrop-blur-3xl p-6 sm:p-10 w-full max-w-md relative z-10 border border-white/50 rounded-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]"
       >
         <div className="flex flex-col items-center mb-10">
           <motion.div 
             animate={{ scale: [1, 1.08, 1] }}
+            whileHover={{ rotate: 180 }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             className="w-16 h-16 bg-gradient-to-tr from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/30 text-white"
           >
             <Sun className="w-8 h-8" />
           </motion.div>
-          <h1 className="text-4xl font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-rose-600">
+          <h1 className="text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-rose-600">
             Rise & Focus
           </h1>
-          <p className="text-sm font-medium tracking-wide opacity-70 mt-2 flex items-center gap-2">
+          <p className="text-sm font-medium opacity-70 mt-2 flex items-center gap-2">
             Let's achieve greatness today <Sparkles className="w-4 h-4 text-amber-500" />
           </p>
         </div>
@@ -81,7 +79,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              className="w-full bg-white/50 border border-white/60 rounded-xl px-5 py-4 outline-none focus:border-orange-400/50 transition-all text-slate-800 font-medium placeholder:text-slate-400"
+              className="w-full bg-white/50 border border-white/60 rounded-xl px-5 py-4 outline-none focus:border-orange-400/50 focus:ring-4 focus:ring-orange-400/10 transition-all text-slate-800 font-medium placeholder:text-slate-400"
               placeholder="genius@work.com"
             />
           </motion.div>
@@ -91,7 +89,7 @@ export default function LoginPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <label className="text-xs font-bold uppercase tracking-wider text-rose-800/60 mb-2 block">Password</label>
+            <label className="text-xs font-bold uppercase tracking-wider text-rose-800/60 mb-2 block">Secret Password</label>
             <div className="relative">
               <motion.input
                 whileFocus={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.9)", boxShadow: "0 0 15px rgba(249, 115, 22, 0.2)" }}
@@ -100,7 +98,7 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
-                className="w-full bg-white/50 border border-white/60 rounded-xl px-5 py-4 outline-none focus:border-orange-400/50 transition-all text-slate-800 font-medium placeholder:text-slate-400"
+                className="w-full bg-white/50 border border-white/60 rounded-xl px-5 py-4 outline-none focus:border-orange-400/50 focus:ring-4 focus:ring-orange-400/10 transition-all text-slate-800 font-medium placeholder:text-slate-400"
                 placeholder="••••••••"
               />
               <button
