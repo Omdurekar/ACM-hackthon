@@ -127,9 +127,36 @@ const getSessionSummary = async (req, res) => {
   }
 };
 
+// @desc    End a session early (standalone frontend endpoint)
+// @route   POST /api/sessions/end-early
+// @access  Public
+const endEarlySession = async (req, res) => {
+  try {
+    const { duration, phase, timestamp } = req.body;
+    
+    // Map frontend 'rest' phase to backend 'break' type
+    const mappedType = phase === 'rest' ? 'break' : 'focus';
+
+    // Create a new session record for the early-ended session
+    const session = await Session.create({
+      type: mappedType,
+      status: 'interrupted',
+      startTime: new Date(new Date(timestamp).getTime() - duration * 1000), // Approximate start time
+      endTime: new Date(timestamp),
+      duration: duration,
+      interruptionReason: 'Ended Early from UI'
+    });
+
+    res.status(201).json({ session });
+  } catch (error) {
+    res.status(500).json({ error: 'Server Error' });
+  }
+};
+
 module.exports = {
   startSession,
   completeSession,
   interruptSession,
   getSessionSummary,
+  endEarlySession,
 };

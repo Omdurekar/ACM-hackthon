@@ -5,10 +5,12 @@ const {
   completeSession,
   interruptSession,
   getSessionSummary,
+  endEarlySession,
 } = require('../controllers/sessionController');
 
 router.route('/').post(startSession);
 router.route('/summary').get(getSessionSummary);
+router.route('/end-early').post(endEarlySession);
 router.route('/:id/complete').put(completeSession);
 router.route('/:id/interrupt').put(interruptSession);
 
