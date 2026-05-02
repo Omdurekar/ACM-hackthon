@@ -11,6 +11,7 @@ export function AddTask({ onGenerate }: { onGenerate: (task: any) => void }) {
   const [difficulty, setDifficulty] = useState("medium");
   const [urgency, setUrgency] = useState("medium");
   const [templates, setTemplates] = useState<any[]>([]);
+  const [templatesLoaded, setTemplatesLoaded] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -22,9 +23,16 @@ export function AddTask({ onGenerate }: { onGenerate: (task: any) => void }) {
           // Auto-select the first template
           setPreset(data.templates[0].name);
           setDifficulty(data.templates[0].difficulty);
+        } else {
+          setTemplates([]);
         }
+        setTemplatesLoaded(true);
       })
-      .catch((err) => console.error("Error fetching templates:", err));
+      .catch(() => {
+        // Backend may be offline — degrade gracefully
+        setTemplates([]);
+        setTemplatesLoaded(true);
+      });
   }, []);
 
   const handleGenerate = () => {
@@ -92,7 +100,7 @@ export function AddTask({ onGenerate }: { onGenerate: (task: any) => void }) {
             </button>
           ))
         ) : (
-          <span className="opacity-50">Loading templates...</span>
+          <span className="opacity-50">{templatesLoaded ? "No templates available" : "Loading templates..."}</span>
         )}
       </div>
       

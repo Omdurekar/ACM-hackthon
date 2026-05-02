@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { SmartTimer } from "@/components/SmartTimer";
 import { TaskCard, type Task } from "@/components/TaskCard";
 import { AddTask } from "@/components/AddTask";
+import { ProfileMenu } from "@/components/ProfileMenu";
 import { useSession } from "@/context/SessionContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, PlayCircle, Lightbulb } from "lucide-react";
@@ -50,8 +51,8 @@ export default function HomePage() {
           setTasks(formattedTasks);
         }
       }
-    } catch (err) {
-      console.error("Error fetching tasks:", err);
+    } catch {
+      // Backend may be offline — degrade gracefully
     }
   };
 
@@ -124,21 +125,15 @@ export default function HomePage() {
     <main className="flex-1 container mx-auto px-6 py-12 max-w-6xl flex flex-col gap-10 min-h-screen">
       
       {/* 1 & 2. Header & Quick Stats */}
-      <div className="flex flex-col md:flex-row justify-between items-end gap-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight opacity-90">Good afternoon</h1>
-          <p className="text-sm opacity-60 mt-1">
-            {dateStr || "Loading date..."} •{" "}
-            <button 
-              onClick={() => {
-                setIsLoggedIn(false);
-                router.push("/login");
-              }}
-              className="underline decoration-dotted hover:text-[var(--timer-progress)] transition-colors"
-            >
-              Logout
-            </button>
-          </p>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <div className="flex flex-col gap-4">
+          <ProfileMenu />
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight opacity-90">Good afternoon</h1>
+            <p className="text-sm opacity-60 mt-1">
+              {dateStr || "Loading date..."}
+            </p>
+          </div>
         </div>
         
         <div className="flex gap-4 overflow-x-auto pb-2 md:pb-0">
