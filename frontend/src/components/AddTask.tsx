@@ -36,13 +36,15 @@ export function AddTask({ onGenerate }: { onGenerate: (task: any) => void }) {
   }, []);
 
   const handleGenerate = () => {
-    if (!title.trim()) {
-      setError("Please enter task");
+    // If they typed something, use it. Otherwise, use the preset name!
+    const finalTitle = title.trim() ? `${preset}: ${title.trim()}` : preset;
+
+    if (!finalTitle) {
+      setError("Please select a template or enter a task");
       return;
     }
     
     setError(""); // Clear error
-    const finalTitle = `${preset}: ${title.trim()}`;
     
     // Find the selected template to extract its properties
     const selectedTemplate = templates.find(t => t.name === preset);
@@ -66,6 +68,8 @@ export function AddTask({ onGenerate }: { onGenerate: (task: any) => void }) {
     const selected = templates.find(t => t.name === templateName);
     if (selected) {
       setDifficulty(selected.difficulty);
+      if (selected.urgency) setUrgency(selected.urgency);
+      setError("");
     }
   };
 

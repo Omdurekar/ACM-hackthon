@@ -4,6 +4,7 @@ const predefinedTemplates = [
   {
     name: "Study",
     difficulty: "medium",
+    urgency: "medium",
     type: "normal",
     sessions: 3,
     sessionDuration: 25
@@ -11,6 +12,7 @@ const predefinedTemplates = [
   {
     name: "Revision",
     difficulty: "easy",
+    urgency: "low",
     type: "normal",
     sessions: 2,
     sessionDuration: 25
@@ -18,6 +20,7 @@ const predefinedTemplates = [
   {
     name: "Work",
     difficulty: "medium",
+    urgency: "medium",
     type: "deep",
     sessions: 3,
     sessionDuration: 30
@@ -25,6 +28,7 @@ const predefinedTemplates = [
   {
     name: "Advanced Maths",
     difficulty: "hard",
+    urgency: "high",
     type: "deep",
     sessions: 5,
     sessionDuration: 35
@@ -32,6 +36,7 @@ const predefinedTemplates = [
   {
     name: "Deep Learning",
     difficulty: "hard",
+    urgency: "high",
     type: "deep",
     sessions: 5,
     sessionDuration: 40
