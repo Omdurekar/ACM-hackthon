@@ -35,6 +35,7 @@ const getDailyPlan = async (req, res) => {
 
     // Check if plan already exists for today
     let plan = await DailyPlan.findOne({
+      userId: req.user.id,
       date: { $gte: startOfDay, $lte: endOfDay }
     }).populate('tasks.taskId').populate('executionSequence.taskId');
 
@@ -47,7 +48,7 @@ const getDailyPlan = async (req, res) => {
     }
 
     // Generate new plan
-    const pendingTasks = await Task.find({ status: { $in: ['pending', 'in_progress'] } });
+    const pendingTasks = await Task.find({ userId: req.user.id, status: { $in: ['pending', 'in_progress'] } });
 
     if (!pendingTasks || pendingTasks.length === 0) {
       return res.status(200).json({ message: 'No pending tasks to plan' });
@@ -78,6 +79,7 @@ const getDailyPlan = async (req, res) => {
     });
 
     const newPlan = await DailyPlan.create({
+      userId: req.user.id,
       date: new Date(),
       tasks: planTasks,
       executionSequence,

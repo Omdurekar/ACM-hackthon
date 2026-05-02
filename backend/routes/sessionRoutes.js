@@ -8,10 +8,12 @@ const {
   endEarlySession,
 } = require('../controllers/sessionController');
 
-router.route('/').post(startSession);
-router.route('/summary').get(getSessionSummary);
-router.route('/end-early').post(endEarlySession);
-router.route('/:id/complete').put(completeSession);
-router.route('/:id/interrupt').put(interruptSession);
+const { protect } = require('../middleware/authMiddleware');
+
+router.route('/').post(protect, startSession);
+router.route('/summary').get(protect, getSessionSummary);
+router.route('/end-early').post(protect, endEarlySession);
+router.route('/:id/complete').put(protect, completeSession);
+router.route('/:id/interrupt').put(protect, interruptSession);
 
 module.exports = router;

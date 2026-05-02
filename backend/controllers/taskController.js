@@ -5,7 +5,7 @@ const Task = require('../models/Task');
 // @access  Public (for now)
 const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find();
+    const tasks = await Task.find({ userId: req.user.id });
     res.status(200).json({ tasks });
   } catch (error) {
     res.status(500).json({ error: 'Server Error' });
@@ -24,6 +24,7 @@ const createTask = async (req, res) => {
     }
 
     const task = await Task.create({
+      userId: req.user.id,
       title,
       difficulty,
       urgency,
@@ -43,15 +44,17 @@ const createTask = async (req, res) => {
 // @access  Public
 const updateTask = async (req, res) => {
   try {
-    const task = await Task.findById(req.params.id);
+    const task = await Task.findOne({ _id: req.params.id, userId: req.user.id });
 
     if (!task) {
-      return res.status(404).json({ error: 'Task not found' });
+      return res.status(404).json({ error: 'Task not found or unauthorized' });
     }
 
-    const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    const updatedTask = await Task.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.id },
+      req.body,
+      { new: true }
+    );
 
     res.status(200).json({ task: updatedTask });
   } catch (error) {

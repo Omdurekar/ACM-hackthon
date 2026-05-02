@@ -3,8 +3,9 @@ const mongoose = require('mongoose');
 const taskSchema = new mongoose.Schema(
   {
     userId: {
-      type: String,
-      required: false, // Optional for now until Auth is fully integrated
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
     },
     title: {
       type: String,

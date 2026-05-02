@@ -3,8 +3,9 @@ const mongoose = require('mongoose');
 const dailyPlanSchema = new mongoose.Schema(
   {
     userId: {
-      type: String,
-      required: false,
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
     },
     date: {
       type: Date,
