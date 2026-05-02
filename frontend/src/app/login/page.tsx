@@ -61,7 +61,7 @@ export default function LoginPage() {
             Rise & Focus
           </h1>
           <p className="text-sm font-medium opacity-70 mt-2 flex items-center gap-2">
-            Let's achieve greatness today <Sparkles className="w-4 h-4 text-amber-500" />
+            Let&apos;s achieve greatness today <Sparkles className="w-4 h-4 text-amber-500" />
           </p>
         </div>
 

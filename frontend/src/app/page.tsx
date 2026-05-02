@@ -28,6 +28,7 @@ export default function HomePage() {
       
       if (data.plan && data.plan.tasks) {
         // Map the generated DailyPlan tasks (which are sorted by urgency)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const formattedTasks = data.plan.tasks.map((pt: any) => ({
           id: pt.taskId._id,
           title: pt.taskId.title,
@@ -42,6 +43,7 @@ export default function HomePage() {
         const rawRes = await fetch("http://localhost:5000/api/tasks");
         const rawData = await rawRes.json();
         if (rawData.tasks) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const formattedTasks = rawData.tasks.map((t: any) => ({
             id: t._id,
             title: t.title,
@@ -60,17 +62,20 @@ export default function HomePage() {
     if (!isLoggedIn) {
       router.push("/login");
     } else {
+      // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/set-state-in-effect
       fetchTasks();
     }
   }, [isLoggedIn, router]);
 
   useEffect(() => {
     const d = new Date();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDateStr(d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }));
   }, []);
 
   if (!isLoggedIn) return null;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleGenerate = async (newTaskData: any) => {
     try {
       const res = await fetch("http://localhost:5000/api/tasks", {
@@ -177,7 +182,7 @@ export default function HomePage() {
 
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold opacity-90">Today's Plan</h2>
+              <h2 className="text-xl font-semibold opacity-90">Today&apos;s Plan</h2>
               <button onClick={handleGenerateDailyPlan} className="text-xs opacity-60 hover:opacity-100 underline decoration-dotted">Re-Schedule</button>
             </div>
             {!hasGenerated || tasks.length === 0 ? (

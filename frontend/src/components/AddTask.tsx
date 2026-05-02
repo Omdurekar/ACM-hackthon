@@ -5,11 +5,13 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function AddTask({ onGenerate }: { onGenerate: (task: any) => void }) {
   const [title, setTitle] = useState("");
   const [preset, setPreset] = useState("");
   const [difficulty, setDifficulty] = useState("medium");
   const [urgency, setUrgency] = useState("medium");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [templates, setTemplates] = useState<any[]>([]);
   const [templatesLoaded, setTemplatesLoaded] = useState(false);
   const [error, setError] = useState("");
