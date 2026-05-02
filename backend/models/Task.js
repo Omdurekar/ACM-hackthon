@@ -22,7 +22,7 @@ const taskSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['normal', 'deep work'],
+      enum: ['normal', 'deep work', 'deep'],
       default: 'normal',
     },
     status: {
