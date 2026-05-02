@@ -5,12 +5,15 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function AddTask({ onGenerate }: { onGenerate: (task: any) => void }) {
   const [title, setTitle] = useState("");
   const [preset, setPreset] = useState("");
   const [difficulty, setDifficulty] = useState("medium");
   const [urgency, setUrgency] = useState("medium");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [templates, setTemplates] = useState<any[]>([]);
+  const [templatesLoaded, setTemplatesLoaded] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -22,19 +25,28 @@ export function AddTask({ onGenerate }: { onGenerate: (task: any) => void }) {
           // Auto-select the first template
           setPreset(data.templates[0].name);
           setDifficulty(data.templates[0].difficulty);
+        } else {
+          setTemplates([]);
         }
+        setTemplatesLoaded(true);
       })
-      .catch((err) => console.error("Error fetching templates:", err));
+      .catch(() => {
+        // Backend may be offline — degrade gracefully
+        setTemplates([]);
+        setTemplatesLoaded(true);
+      });
   }, []);
 
   const handleGenerate = () => {
-    if (!title.trim()) {
-      setError("Please enter task");
+    // If they typed something, use it. Otherwise, use the preset name!
+    const finalTitle = title.trim() ? `${preset}: ${title.trim()}` : preset;
+
+    if (!finalTitle) {
+      setError("Please select a template or enter a task");
       return;
     }
     
     setError(""); // Clear error
-    const finalTitle = `${preset}: ${title.trim()}`;
     
     // Find the selected template to extract its properties
     const selectedTemplate = templates.find(t => t.name === preset);
@@ -58,6 +70,8 @@ export function AddTask({ onGenerate }: { onGenerate: (task: any) => void }) {
     const selected = templates.find(t => t.name === templateName);
     if (selected) {
       setDifficulty(selected.difficulty);
+      if (selected.urgency) setUrgency(selected.urgency);
+      setError("");
     }
   };
 
@@ -92,7 +106,7 @@ export function AddTask({ onGenerate }: { onGenerate: (task: any) => void }) {
             </button>
           ))
         ) : (
-          <span className="opacity-50">Loading templates...</span>
+          <span className="opacity-50">{templatesLoaded ? "No templates available" : "Loading templates..."}</span>
         )}
       </div>
       

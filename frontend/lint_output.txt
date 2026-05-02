@@ -1,0 +1,87 @@
+
+> frontend@0.1.0 lint
+> eslint
+
+
+C:\Users\Arjun Nair\OneDrive\Desktop\hackthon010\ACM-hackthon\frontend\src\app\login\page.tsx
+  64:16  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\Arjun Nair\OneDrive\Desktop\hackthon010\ACM-hackthon\frontend\src\app\page.tsx
+   30:57  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+   44:56  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+   62:7   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Arjun Nair\OneDrive\Desktop\hackthon010\ACM-hackthon\frontend\src\app\page.tsx:62:7
+  60 |       router.push("/login");
+  61 |     } else {
+> 62 |       fetchTasks();
+     |       ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  63 |     }
+  64 |   }, [isLoggedIn, router]);
+  65 |                                                                                            react-hooks/set-state-in-effect
+   68:5   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Arjun Nair\OneDrive\Desktop\hackthon010\ACM-hackthon\frontend\src\app\page.tsx:68:5
+  66 |   useEffect(() => {
+  67 |     const d = new Date();
+> 68 |     setDateStr(d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }));
+     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  69 |   }, []);
+  70 |
+  71 |   if (!isLoggedIn) return null;  react-hooks/set-state-in-effect
+   73:46  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  185:69  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 react/no-unescaped-entities
+
+C:\Users\Arjun Nair\OneDrive\Desktop\hackthon010\ACM-hackthon\frontend\src\components\AddTask.tsx
+   8:62  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  13:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Arjun Nair\OneDrive\Desktop\hackthon010\ACM-hackthon\frontend\src\components\SmartTimer.tsx
+  16:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Arjun Nair\OneDrive\Desktop\hackthon010\ACM-hackthon\frontend\src\components\SmartTimer.tsx:16:5
+  14 |
+  15 |   useEffect(() => {
+> 16 |     setTimeLeft(phase === "focus" ? 25 * 60 : 5 * 60);
+     |     ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  17 |     setIsActive(false);
+  18 |     setIsEndedEarly(false);
+  19 |   }, [phase]);                       react-hooks/set-state-in-effect
+  28:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Arjun Nair\OneDrive\Desktop\hackthon010\ACM-hackthon\frontend\src\components\SmartTimer.tsx:28:7
+  26 |       }, 1000);
+  27 |     } else if (timeLeft === 0) {
+> 28 |       setIsActive(false);
+     |       ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  29 |     }
+  30 |     return () => {
+  31 |       if (interval !== null) window.clearInterval(interval);  react-hooks/set-state-in-effect
+  60:14  warning  'error' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+
+✖ 12 problems (11 errors, 1 warning)
+
