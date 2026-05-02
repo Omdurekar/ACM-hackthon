@@ -8,6 +8,7 @@ const taskRoutes = require('./routes/taskRoutes');
 const sessionRoutes = require('./routes/sessionRoutes');
 const planRoutes = require('./routes/planRoutes');
 const templateRoutes = require('./routes/templateRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 // Connect to MongoDB
 connectDB().then(() => {
@@ -27,6 +28,7 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/daily-plan', planRoutes);
 app.use('/api/task-templates', templateRoutes);
+app.use('/api/auth', authRoutes);
 
 // Add health check endpoint
 app.get('/api/health', (req, res) => {

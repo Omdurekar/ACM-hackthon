@@ -13,13 +13,14 @@ const startSession = async (req, res) => {
     }
 
     if (taskId) {
-      const task = await Task.findById(taskId);
+      const task = await Task.findOne({ _id: taskId, userId: req.user.id });
       if (!task) {
         return res.status(404).json({ error: 'Task not found' });
       }
     }
 
     const session = await Session.create({
+      userId: req.user.id,
       taskId,
       type,
       status: 'in_progress',
@@ -37,7 +38,7 @@ const startSession = async (req, res) => {
 // @access  Public
 const completeSession = async (req, res) => {
   try {
-    const session = await Session.findById(req.params.id);
+    const session = await Session.findOne({ _id: req.params.id, userId: req.user.id });
 
     if (!session) {
       return res.status(404).json({ error: 'Session not found' });
@@ -68,7 +69,7 @@ const completeSession = async (req, res) => {
 const interruptSession = async (req, res) => {
   try {
     const { interruptionReason } = req.body;
-    const session = await Session.findById(req.params.id);
+    const session = await Session.findOne({ _id: req.params.id, userId: req.user.id });
 
     if (!session) {
       return res.status(404).json({ error: 'Session not found' });
@@ -99,7 +100,7 @@ const interruptSession = async (req, res) => {
 // @access  Public
 const getSessionSummary = async (req, res) => {
   try {
-    const sessions = await Session.find();
+    const sessions = await Session.find({ userId: req.user.id });
 
     let totalCompleted = 0;
     let totalInterrupted = 0;

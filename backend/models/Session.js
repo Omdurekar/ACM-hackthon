@@ -8,8 +8,9 @@ const sessionSchema = new mongoose.Schema(
       required: false, // Breaks might not be associated with a specific task
     },
     userId: {
-      type: String,
-      required: false,
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
     },
     type: {
       type: String,
